@@ -1,0 +1,332 @@
+.landing {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+}
+
+.landing__bg-grid {
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(232,168,56,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(232,168,56,0.04) 1px, transparent 1px);
+  background-size: 48px 48px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.landing__bg-glow {
+  position: fixed;
+  top: -200px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 800px;
+  height: 600px;
+  background: radial-gradient(ellipse at center, rgba(232,168,56,0.08) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.landing__header {
+  position: relative;
+  z-index: 1;
+  padding: 1.5rem 2rem;
+  display: flex;
+  align-items: center;
+}
+
+.landing__logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.landing__logo-icon {
+  color: var(--amber);
+  font-size: 20px;
+}
+
+.landing__logo-text {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  color: var(--cream);
+  letter-spacing: -0.01em;
+}
+
+.landing__main {
+  flex: 1;
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1.5rem 3rem;
+  gap: 2.5rem;
+}
+
+.landing__hero {
+  text-align: center;
+  max-width: 560px;
+}
+
+.landing__badge {
+  display: inline-block;
+  background: rgba(232,168,56,0.12);
+  border: 1px solid rgba(232,168,56,0.25);
+  color: var(--amber-light);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 5px 14px;
+  border-radius: 100px;
+  margin-bottom: 1.25rem;
+}
+
+.landing__title {
+  font-family: var(--font-display);
+  font-size: clamp(2.8rem, 6vw, 4.2rem);
+  line-height: 1.1;
+  color: var(--cream);
+  letter-spacing: -0.02em;
+  margin-bottom: 1rem;
+}
+
+.landing__title em {
+  font-style: italic;
+  color: var(--amber);
+}
+
+.landing__subtitle {
+  font-size: 1rem;
+  color: var(--muted-light);
+  line-height: 1.7;
+  max-width: 440px;
+  margin: 0 auto;
+}
+
+.landing__card {
+  background: var(--navy-light);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: var(--radius-xl);
+  padding: 2rem 2rem;
+  width: 100%;
+  max-width: 520px;
+  box-shadow: var(--shadow-card);
+}
+
+.landing__card-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 1.75rem;
+}
+
+.landing__step {
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  color: var(--amber);
+  opacity: 0.7;
+  letter-spacing: 0.04em;
+}
+
+.landing__card-title {
+  font-size: 1.05rem;
+  font-weight: 500;
+  color: var(--cream);
+}
+
+.landing__field {
+  margin-bottom: 1.75rem;
+}
+
+.landing__label {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--muted-light);
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  margin-bottom: 0.65rem;
+}
+
+.landing__input-wrap {
+  position: relative;
+}
+
+.landing__input {
+  width: 100%;
+  background: var(--navy-mid);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: var(--radius-md);
+  padding: 0.75rem 2.5rem 0.75rem 1rem;
+  font-size: 0.95rem;
+  color: var(--cream);
+  transition: border-color 0.2s;
+}
+
+.landing__input::placeholder {
+  color: var(--muted);
+}
+
+.landing__input:focus {
+  border-color: rgba(232,168,56,0.4);
+}
+
+.landing__input-check {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--amber);
+  font-size: 0.9rem;
+}
+
+.landing__radio-group {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.landing__radio-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 0.85rem 0.5rem;
+  background: var(--navy-mid);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+  text-align: center;
+}
+
+.landing__radio-card input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.landing__radio-card--active {
+  border-color: rgba(232,168,56,0.5);
+  background: rgba(232,168,56,0.07);
+}
+
+.landing__radio-card:hover:not(.landing__radio-card--active) {
+  border-color: rgba(255,255,255,0.15);
+}
+
+.landing__radio-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--cream);
+}
+
+.landing__radio-card--active .landing__radio-label {
+  color: var(--amber-light);
+}
+
+.landing__radio-desc {
+  font-size: 0.72rem;
+  color: var(--muted);
+}
+
+.landing__btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 0.9rem 1.5rem;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: var(--radius-md);
+  color: var(--muted);
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: not-allowed;
+  transition: all 0.2s;
+}
+
+.landing__btn--active {
+  background: var(--amber);
+  border-color: var(--amber);
+  color: var(--navy);
+  cursor: pointer;
+}
+
+.landing__btn--active:hover {
+  background: var(--amber-light);
+  border-color: var(--amber-light);
+  transform: translateY(-1px);
+}
+
+.landing__btn--active:active {
+  transform: translateY(0);
+}
+
+.landing__btn-arrow {
+  font-size: 1.1rem;
+  transition: transform 0.2s;
+}
+
+.landing__btn--active:hover .landing__btn-arrow {
+  transform: translateX(3px);
+}
+
+.landing__features {
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.landing__feature {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.landing__feature-icon {
+  color: var(--amber);
+  font-size: 0.9rem;
+  opacity: 0.7;
+}
+
+.landing__feature-label {
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
+.landing__footer {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  padding: 1.25rem;
+  font-size: 0.75rem;
+  color: var(--muted);
+  opacity: 0.5;
+}
+
+@media (max-width: 480px) {
+  .landing__card {
+    padding: 1.5rem 1.25rem;
+  }
+
+  .landing__radio-group {
+    grid-template-columns: 1fr;
+  }
+
+  .landing__features {
+    gap: 1rem;
+    flex-direction: column;
+    align-items: center;
+  }
+}
