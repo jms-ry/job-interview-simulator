@@ -45,10 +45,7 @@ export default function InterviewModal({ config, onClose }) {
     try {
       const introMessages = [{ role: 'user', content: 'Start the interview introduction.' }]
       const reply = await sendMessage(systemPrompt, introMessages)
-      setMessages([
-        { role: 'user', content: 'Start the interview introduction.' },
-        { role: 'assistant', content: reply }
-      ])
+      setMessages([{ role: 'assistant', content: reply }])
     } catch (e) {
       setError('Failed to connect. Please try again.')
     } finally {
