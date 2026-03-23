@@ -89,6 +89,23 @@ export default function InterviewModal({ config, onClose }) {
       const reply = await sendMessage(systemPrompt, updatedMessages)
       console.log('4. got reply:', reply)
 
+      const assistantMessage = { role: 'assistant', content: reply }
+      setMessages([...updatedMessages, assistantMessage])
+
+      if (phase === PHASE.INTRO) {
+        const lower = reply.toLowerCase()
+        const isAsking = ['ready', 'shall we', 'begin', 'start'].some(w => lower.includes(w))
+        if (isAsking) setPhase(PHASE.IN_PROGRESS)
+      }
+
+      if (phase === PHASE.IN_PROGRESS) {
+        const newCount = questionsAsked + 1
+        setQuestionsAsked(newCount)
+        if (newCount >= totalQuestions) {
+          setPhase(PHASE.AWAITING_SCORE_REQUEST)
+        }
+      }
+
     } catch (e) {
       console.log('CAUGHT ERROR:', e.message, e)
       setError('Something went wrong. Please try again.')
