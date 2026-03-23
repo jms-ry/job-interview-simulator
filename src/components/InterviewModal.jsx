@@ -40,21 +40,13 @@ export default function InterviewModal({ config, onClose }) {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages, isTyping])
 
-  const startIntro = async () => {
-    setIsTyping(true)
-    try {
-      const introMessages = [{ role: 'user', content: 'Start the interview introduction.', hidden: true }]
-      const reply = await sendMessage(systemPrompt, introMessages)
-      setMessages([
-        { role: 'user', content: 'Start the interview introduction.', hidden: true },
-        { role: 'assistant', content: reply }
-      ])
-    } catch (e) {
-      setError('Failed to connect. Please try again.')
-    } finally {
-      setIsTyping(false)
-      inputRef.current?.focus()
-    }
+  const startIntro = () => {
+    setMessages([
+      {
+        role: 'assistant',
+        content: `Hi there! I'm Alex, your interview simulator. I'll be conducting a mock interview with you today for the ${config.position} position. We have ${totalQuestions} questions lined up for you.\n\nHow are you doing today? Are you ready to get started?`
+      }
+    ])
   }
 
   const handleSend = async () => {
