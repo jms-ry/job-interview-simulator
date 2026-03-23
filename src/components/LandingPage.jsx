@@ -32,7 +32,7 @@ export default function LandingPage({ onStart }) {
 
       <main className="landing__main">
         <div className="landing__hero">
-          <div className="landing__badge">Powered by Claude AI</div>
+          <div className="landing__badge">Powered by Gemini AI</div>
           <h1 className="landing__title">
             Ace Your Next<br />
             <em>Job Interview</em>
@@ -119,7 +119,7 @@ export default function LandingPage({ onStart }) {
       </main>
 
       <footer className="landing__footer">
-        <p>Built with Claude AI · Practice makes perfect</p>
+        <p>Practice makes perfect</p>
       </footer>
     </div>
   )
