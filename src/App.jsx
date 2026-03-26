@@ -15,7 +15,8 @@ function App() {
   const [weatherLoading, setWeatherLoading] = useState(false)
   const [weatherError, setWeatherError] = useState(null)
   const [locationLabel, setLocationLabel] = useState('')
-
+  const [startTime, setStartTime] = useState(null)
+  const [startMode, setStartMode] = useState('now')
   const handleLocationSelect = async (location) => {
     setLocationLabel(location.shortLabel)
     setWeatherLoading(true)
@@ -30,9 +31,11 @@ function App() {
     }
   }
 
-  const handleCheck = ({ task, duration }) => {
+  const handleCheck = ({ task, duration, startTime, startMode }) => {
     setSelectedTask(task)
     setDuration(duration)
+    setStartTime(startTime)
+    setStartMode(startMode)
     setModalOpen(true)
   }
 
@@ -57,7 +60,8 @@ function App() {
           <ResultModal
             task={selectedTask}
             duration={duration}
-            weather={weather}
+            startTime={startTime}
+            startMode={startMode}
             onClose={() => setModalOpen(false)}
           />
         )}

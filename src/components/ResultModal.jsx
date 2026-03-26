@@ -42,7 +42,7 @@ const VERDICT_CONFIG = {
   bad:   { emoji: '❌', className: 'bad'   },
 }
 
-export default function ResultModal({ task, duration, onClose }) {
+export default function ResultModal({ task, duration, startTime, startMode, onClose }) {
   const [loading, setLoading] = useState(true)
   const [stepIndex, setStepIndex] = useState(0)
   const [progress, setProgress] = useState(0)
@@ -91,7 +91,10 @@ export default function ResultModal({ task, duration, onClose }) {
         <div className="modal__header">
           <div className="modal__task-info">
             <span className="modal__task-name">{task}</span>
-            <span className="modal__task-duration">· {duration} hrs</span>
+            <span className="modal__task-duration">
+              · {duration} hrs
+              · {startMode === 'now' ? 'Starting now' : `Starting at ${new Date(`1970-01-01T${startTime}`).toLocaleTimeString('en-PH', { hour: 'numeric', minute: '2-digit', hour12: true })}`}
+            </span>
           </div>
           <button className="modal__close" onClick={onClose}>✕</button>
         </div>

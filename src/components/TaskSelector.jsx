@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import './TaskSelector.css'
 
 const TASKS = [
@@ -17,24 +17,48 @@ const TASKS = [
 ]
 
 const DURATIONS = [
-  { value: '1-2',  label: '1–2 hrs',  sub: 'Short'    },
-  { value: '3-5',  label: '3–5 hrs',  sub: 'Half day' },
-  { value: '6-8',  label: '6–8 hrs',  sub: 'Full day' },
+  { value: '1-2', label: '1–2 hrs', sub: 'Short'    },
+  { value: '3-5', label: '3–5 hrs', sub: 'Half day' },
+  { value: '6-8', label: '6–8 hrs', sub: 'Full day' },
 ]
+
+function getNowTimeValue() {
+  const now = new Date()
+  const h = String(now.getHours()).padStart(2, '0')
+  const m = String(now.getMinutes()).padStart(2, '0')
+  return `${h}:${m}`
+}
+
+function getMinTime() {
+  return getNowTimeValue()
+}
 
 export default function TaskSelector({ onCheck, disabled }) {
   const [selectedTask, setSelectedTask] = useState(null)
   const [customTask, setCustomTask] = useState('')
   const [duration, setDuration] = useState(null)
+  const [startMode, setStartMode] = useState('now')
+  const [customTime, setCustomTime] = useState('')
+  const [minTime, setMinTime] = useState(getMinTime())
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setMinTime(getMinTime())
+    }, 60000)
+    return () => clearInterval(interval)
+  }, [])
 
   const activeTask = customTask.trim() || selectedTask
-  const canCheck = activeTask && duration
+  const canCheck = activeTask && duration && (startMode === 'now' || customTime !== '')
 
   const handleCheck = () => {
     if (!canCheck) return
+    const startTime = startMode === 'now' ? getNowTimeValue() : customTime
     onCheck({
       task: customTask.trim() || TASKS.find(t => t.id === selectedTask)?.name || selectedTask,
       duration,
+      startTime,
+      startMode,
     })
   }
 
@@ -46,6 +70,17 @@ export default function TaskSelector({ onCheck, disabled }) {
   const handleTaskSelect = (id) => {
     setSelectedTask(id)
     setCustomTask('')
+  }
+
+  const handleTimeChange = (e) => {
+    const val = e.target.value
+    if (val < minTime) return
+    setCustomTime(val)
+  }
+
+  const handleStartModeChange = (mode) => {
+    setStartMode(mode)
+    if (mode === 'now') setCustomTime('')
   }
 
   return (
@@ -95,6 +130,45 @@ export default function TaskSelector({ onCheck, disabled }) {
         ))}
       </div>
 
+      <div className="task-selector__time-label">Start Time</div>
+      <div className="task-selector__time-row">
+        <button
+          className={`time-btn ${startMode === 'now' ? 'time-btn--active' : ''}`}
+          onClick={() => handleStartModeChange('now')}
+        >
+          <span className="time-btn__icon">⚡</span>
+          <span className="time-btn__label">Now</span>
+        </button>
+
+        <div
+          className={`time-btn time-btn--custom-wrap ${startMode === 'custom' ? 'time-btn--active' : ''}`}
+          onClick={() => handleStartModeChange('custom')}
+        >
+          <span className="time-btn__icon">🕐</span>
+          {startMode === 'custom' ? (
+            <input
+              className="time-btn__custom-input"
+              type="time"
+              value={customTime}
+              min={minTime}
+              onChange={handleTimeChange}
+              onClick={e => e.stopPropagation()}
+              autoFocus
+            />
+          ) : (
+            <span className="time-btn__label">Custom</span>
+          )}
+        </div>
+      </div>
+
+      {startMode === 'custom' && customTime && (
+        <p className="task-selector__time-preview">
+          Task starts at {new Date(`1970-01-01T${customTime}`).toLocaleTimeString('en-PH', {
+            hour: 'numeric', minute: '2-digit', hour12: true,
+          })}
+        </p>
+      )}
+
       <button
         className={`task-selector__cta ${canCheck && !disabled ? 'task-selector__cta--active' : ''}`}
         onClick={handleCheck}
@@ -103,11 +177,13 @@ export default function TaskSelector({ onCheck, disabled }) {
         <span>Check Task Feasibility</span>
         <span className="task-selector__cta-arrow">→</span>
       </button>
+
       {disabled && (
         <p className="task-selector__disabled-hint">
           ⬆ Enter your location first to check task feasibility
         </p>
       )}
+
     </div>
   )
 }

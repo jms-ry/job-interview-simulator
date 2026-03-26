@@ -66,6 +66,7 @@
 }
 
 .task-selector__custom {
+  margin-top: 1rem;
   margin-bottom: 20px;
 }
 
@@ -102,7 +103,8 @@
   color: var(--muted);
 }
 
-.task-selector__duration-label {
+.task-selector__duration-label,
+.task-selector__time-label {
   font-size: 11px;
   font-weight: 500;
   color: var(--muted);
@@ -114,7 +116,7 @@
 .task-selector__duration-row {
   display: flex;
   gap: 8px;
-  margin-bottom: 16px;
+  margin-bottom: 20px;
 }
 
 .duration-btn {
@@ -156,6 +158,85 @@
   color: var(--muted);
 }
 
+.task-selector__time-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.time-btn {
+  flex: 1;
+  background: var(--bg3);
+  border: 1px solid var(--border2);
+  border-radius: var(--radius-md);
+  padding: 10px 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: border-color 0.18s, background 0.18s;
+}
+
+.time-btn:hover:not(.time-btn--active) {
+  background: var(--bg4);
+}
+
+.time-btn--active {
+  background: var(--green-bg2);
+  border-color: rgba(76, 175, 80, 0.45);
+}
+
+.time-btn__icon { font-size: 14px; }
+
+.time-btn__label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--cream);
+}
+
+.time-btn--active .time-btn__label {
+  color: var(--green-l);
+}
+
+.time-btn--time-input {
+  flex: 1;
+  background: var(--bg3);
+  border: 1px solid var(--border2);
+  border-radius: var(--radius-md);
+  padding: 10px 12px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--muted);
+  cursor: pointer;
+  transition: border-color 0.18s, background 0.18s;
+  text-align: center;
+  font-family: var(--font-body);
+}
+
+.time-btn--time-input:focus {
+  outline: none;
+  border-color: rgba(76, 175, 80, 0.45);
+  background: var(--green-bg2);
+  color: var(--green-l);
+}
+
+.time-btn--time-input.time-btn--active {
+  color: var(--green-l);
+}
+
+.time-btn--time-input::-webkit-calendar-picker-indicator {
+  filter: invert(0.5);
+  cursor: pointer;
+}
+
+.task-selector__time-preview {
+  font-size: 12px;
+  color: var(--green-l);
+  padding-left: 4px;
+  margin-bottom: 10px;
+}
+
 .task-selector__cta {
   width: 100%;
   padding: 14px;
@@ -173,6 +254,30 @@
   justify-content: center;
   gap: 10px;
   transition: all 0.18s;
+  margin-top: 1rem;
+}
+
+.time-btn--custom-wrap {
+  cursor: pointer;
+  position: relative;
+}
+
+.time-btn__custom-input {
+  background: transparent;
+  border: none;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: var(--font-body);
+  color: var(--green-l);
+  cursor: pointer;
+  outline: none;
+  width: 100%;
+  text-align: center;
+}
+
+.time-btn__custom-input::-webkit-calendar-picker-indicator {
+  filter: invert(0.5);
+  cursor: pointer;
 }
 
 .task-selector__cta--active {
@@ -200,12 +305,6 @@
   transform: translateX(3px);
 }
 
-@media (max-width: 380px) {
-  .task-selector__grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
 .task-selector__disabled-hint {
   text-align: center;
   font-size: 12px;
@@ -217,4 +316,10 @@
 @keyframes fadeIn {
   from { opacity: 0; }
   to   { opacity: 1; }
+}
+
+@media (max-width: 380px) {
+  .task-selector__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
