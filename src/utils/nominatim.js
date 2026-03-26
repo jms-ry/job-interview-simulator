@@ -34,8 +34,9 @@ export async function searchLocation(query) {
 function formatShortLabel(item) {
   const a = item.address
   const parts = [
-    a.village || a.town || a.city || a.municipality,
+    a.village || a.hamlet || a.suburb,
+    a.town || a.city || a.municipality,
     a.province || a.state,
   ].filter(Boolean)
-  return parts.length > 0 ? parts.join(', ') : item.display_name.split(',').slice(0, 2).join(',')
+  return parts.length > 0 ? parts.join(', ') : item.display_name.split(',').slice(0, 3).join(',')
 }
