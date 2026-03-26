@@ -311,11 +311,16 @@ export function analyzeFeasibility(taskName, startTime, durationValue, hourlyDat
 function getWeatherWindow(startTime, durationValue, hourlyData) {
   const durationHours = parseDurationMax(durationValue)
   const startDate = getStartDate(startTime)
+  const endDate = new Date(startDate.getTime() + durationHours * 60 * 60 * 1000)
+
+  console.log('startDate:', startDate)
+  console.log('endDate:', endDate)
+  console.log('first hourly time:', hourlyData[0]?.time)
+  console.log('hourlyData length:', hourlyData.length)
 
   return hourlyData
     .filter(h => {
       const hTime = new Date(h.time)
-      const endDate = new Date(startDate.getTime() + durationHours * 60 * 60 * 1000)
       return hTime >= startDate && hTime < endDate
     })
     .slice(0, durationHours)
@@ -402,7 +407,7 @@ function formatTime(date) {
 }
 
 function buildFactors(window) {
-  
+
   if (window.length === 0) return [
     { icon: '🌧', label: 'Rain',     value: 'N/A', level: 'ok' },
     { icon: '💨', label: 'Wind',     value: 'N/A', level: 'ok' },
