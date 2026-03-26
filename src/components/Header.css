@@ -6,6 +6,8 @@
   justify-content: space-between;
   gap: 12px;
   border-bottom: 1px solid var(--border);
+  position: relative;
+  z-index: 50;
 }
 
 .header__logo {
@@ -47,6 +49,12 @@
   letter-spacing: 0.03em;
 }
 
+.header__location-wrap {
+  position: relative;
+  max-width: 260px;
+  width: 100%;
+}
+
 .header__location-input {
   display: flex;
   align-items: center;
@@ -56,12 +64,15 @@
   border-radius: var(--radius-md);
   padding: 9px 12px;
   transition: border-color 0.18s;
-  max-width: 260px;
-  width: 100%;
+}
+
+.header__location-input--open {
+  border-radius: var(--radius-md) var(--radius-md) 0 0;
+  border-color: rgba(76,175,80,0.4);
 }
 
 .header__location-input:focus-within {
-  border-color: rgba(76, 175, 80, 0.4);
+  border-color: rgba(76,175,80,0.4);
 }
 
 .header__location-icon {
@@ -82,14 +93,92 @@
   color: var(--muted);
 }
 
-/* Stack vertically on small screens */
+.header__location-spinner {
+  width: 12px;
+  height: 12px;
+  border: 2px solid var(--border2);
+  border-top-color: var(--green);
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+  flex-shrink: 0;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.header__dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: var(--bg3);
+  border: 1.5px solid rgba(76,175,80,0.4);
+  border-top: none;
+  border-radius: 0 0 var(--radius-md) var(--radius-md);
+  z-index: 100;
+  overflow: hidden;
+}
+
+.header__suggestion {
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 9px 12px;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.15s;
+}
+
+.header__suggestion:last-child {
+  border-bottom: none;
+}
+
+.header__suggestion:hover {
+  background: var(--bg4);
+}
+
+.header__suggestion-icon {
+  font-size: 12px;
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
+.header__suggestion-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.header__suggestion-short {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--cream);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.header__suggestion-full {
+  font-size: 10px;
+  color: var(--muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 @media (max-width: 480px) {
   .header {
     flex-direction: column;
     align-items: flex-start;
   }
 
-  .header__location-input {
+  .header__location-wrap {
     max-width: 100%;
   }
 }

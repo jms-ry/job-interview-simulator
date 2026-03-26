@@ -22,7 +22,7 @@ const DURATIONS = [
   { value: '6-8',  label: '6–8 hrs',  sub: 'Full day' },
 ]
 
-export default function TaskSelector({ onCheck }) {
+export default function TaskSelector({ onCheck, disabled }) {
   const [selectedTask, setSelectedTask] = useState(null)
   const [customTask, setCustomTask] = useState('')
   const [duration, setDuration] = useState(null)
@@ -103,7 +103,11 @@ export default function TaskSelector({ onCheck }) {
         <span>Check Task Feasibility</span>
         <span className="task-selector__cta-arrow">→</span>
       </button>
-
+      {disabled && (
+        <p className="task-selector__disabled-hint">
+          ⬆ Enter your location first to check task feasibility
+        </p>
+      )}
     </div>
   )
 }
