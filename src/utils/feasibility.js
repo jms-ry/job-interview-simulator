@@ -280,7 +280,16 @@ export function analyzeFeasibility(taskName, startTime, durationValue, hourlyDat
   const window = getWeatherWindow(startTime, durationValue, hourlyData)
 
   if (window.length === 0) {
-    return buildResult(profile, 'good', [], hourlyData, startTime, durationValue)
+    return {
+      verdict: 'good',
+      verdictLabel: 'Good to Go!',
+      verdictSub: `No weather data available for the selected window. Conditions assumed favorable.`,
+      hourly: [],
+      factors: buildFactors([]),
+      bestTime: null,
+      tips: profile.tips.base,
+      profile,
+    }
   }
 
   const verdict = determineVerdict(window, profile)
@@ -393,6 +402,13 @@ function formatTime(date) {
 }
 
 function buildFactors(window) {
+  
+  if (window.length === 0) return [
+    { icon: '🌧', label: 'Rain',     value: 'N/A', level: 'ok' },
+    { icon: '💨', label: 'Wind',     value: 'N/A', level: 'ok' },
+    { icon: '💧', label: 'Humidity', value: 'N/A', level: 'ok' },
+    { icon: '🌡', label: 'Temp',     value: 'N/A', level: 'ok' },
+  ]
   const maxRain = Math.max(...window.map(h => h.rain))
   const maxWind = Math.max(...window.map(h => h.wind))
   const maxHumidity = Math.max(...window.map(h => h.humidity))
