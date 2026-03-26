@@ -49,6 +49,7 @@ export default function ResultModal({ task, duration, startTime, startMode, weat
       const analysis = analyzeFeasibility(
         task,
         resolvedStartTime,
+        startMode,
         duration,
         weather.hourly
       )

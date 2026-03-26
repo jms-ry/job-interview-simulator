@@ -275,9 +275,9 @@ export function getActivityProfile(taskName) {
   return { id: 'generic', ...GENERIC_OUTDOOR_PROFILE }
 }
 
-export function analyzeFeasibility(taskName, startTime, durationValue, hourlyData) {
+export function analyzeFeasibility(taskName, startTime, startMode, durationValue, hourlyData) {
   const profile = getActivityProfile(taskName)
-  const window = getWeatherWindow(startTime, durationValue, hourlyData)
+  const window = getWeatherWindow(startTime, durationValue, hourlyData, startMode)
 
   if (window.length === 0) {
     return {
@@ -308,30 +308,30 @@ export function analyzeFeasibility(taskName, startTime, durationValue, hourlyDat
   }
 }
 
-function getWeatherWindow(startTime, durationValue, hourlyData) {
+function getWeatherWindow(startTime, durationValue, hourlyData, startMode) {
   const durationHours = parseDurationMax(durationValue)
-  const startDate = getStartDate(startTime)
+  const startDate = getStartDate(startTime, startMode)
   const endDate = new Date(startDate.getTime() + durationHours * 60 * 60 * 1000)
 
   console.log('startDate:', startDate)
   console.log('endDate:', endDate)
   console.log('first hourly time:', hourlyData[0]?.time)
-  console.log('hourlyData length:', hourlyData.length)
 
   return hourlyData
     .filter(h => {
-      const hTime = new Date(h.time)
+      const hTime = new Date(h.time + ':00+08:00')
       return hTime >= startDate && hTime < endDate
     })
     .slice(0, durationHours)
 }
 
-function getStartDate(startTime) {
+function getStartDate(startTime, startMode) {
+  if (startMode === 'now') return new Date()
+
   const now = new Date()
   const [hours, minutes] = startTime.split(':').map(Number)
   const start = new Date(now)
   start.setHours(hours, minutes, 0, 0)
-  if (start < now) start.setDate(start.getDate() + 1)
   return start
 }
 
