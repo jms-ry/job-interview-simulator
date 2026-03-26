@@ -113,12 +113,6 @@
   color: var(--muted);
 }
 
-.weather__location {
-  font-size: 11px;
-  color: var(--green-l);
-  margin-top: 3px;
-}
-
 /* Skeleton loading */
 .weather--loading {
   gap: 16px;

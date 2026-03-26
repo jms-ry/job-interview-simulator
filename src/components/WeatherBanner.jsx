@@ -1,6 +1,6 @@
 import './WeatherBanner.css'
 
-export default function WeatherBanner({ weather, loading, error, location }) {
+export default function WeatherBanner({ weather, loading, error}) {
   if (!weather && !loading && !error) {
     return (
       <div className="weather weather--empty">
@@ -59,7 +59,6 @@ export default function WeatherBanner({ weather, loading, error, location }) {
           <div className="weather__desc">
             {current.description} · Feels like {current.feelsLike}°C
           </div>
-          <div className="weather__location">📍 {location}</div>
           <div className="weather__date">{dateLabel}</div>
         </div>
       </div>

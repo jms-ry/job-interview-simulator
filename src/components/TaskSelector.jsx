@@ -96,9 +96,9 @@ export default function TaskSelector({ onCheck, disabled }) {
       </div>
 
       <button
-        className={`task-selector__cta ${canCheck ? 'task-selector__cta--active' : ''}`}
+        className={`task-selector__cta ${canCheck && !disabled ? 'task-selector__cta--active' : ''}`}
         onClick={handleCheck}
-        disabled={!canCheck}
+        disabled={!canCheck || disabled}
       >
         <span>Check Task Feasibility</span>
         <span className="task-selector__cta-arrow">→</span>
