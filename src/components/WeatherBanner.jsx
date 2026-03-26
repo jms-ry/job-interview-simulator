@@ -1,10 +1,14 @@
 import './WeatherBanner.css'
-
+import locationPin from '../assets/location-pin.png'
 export default function WeatherBanner({ weather, loading, error}) {
   if (!weather && !loading && !error) {
     return (
       <div className="weather weather--empty">
-        <span className="weather__empty-icon">🌾</span>
+        <img
+          src={locationPin}
+          alt="location"
+          className="weather__empty-img"
+        />
         <div>
           <p className="weather__empty-title">Enter your location to get started</p>
           <p className="weather__empty-sub">Type your barangay, municipality, or city above</p>
