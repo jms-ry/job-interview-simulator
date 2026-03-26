@@ -1,0 +1,21 @@
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  
+}
+
+.app__inner {
+  width: 100%;
+  max-width: 800px;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  padding-top: .5rem;
+}
+
+.app__main {
+  flex: 1;
+  padding-bottom: 2rem;
+}

@@ -1,31 +1,39 @@
 import { useState } from 'react'
-import LandingPage from './components/LandingPage'
-import InterviewModal from './components/InterviewModal'
+import Header from './components/Header'
+import WeatherBanner from './components/WeatherBanner'
+import TaskSelector from './components/TaskSelector'
+import ResultModal from './components/ResultModal'
+import Footer from './components/Footer'
 import './App.css'
 
 function App() {
   const [modalOpen, setModalOpen] = useState(false)
-  const [interviewConfig, setInterviewConfig] = useState(null)
+  const [selectedTask, setSelectedTask] = useState(null)
+  const [duration, setDuration] = useState(null)
 
-  const handleStartInterview = (config) => {
-    setInterviewConfig(config)
+  const handleCheck = ({ task, duration }) => {
+    setSelectedTask(task)
+    setDuration(duration)
     setModalOpen(true)
-  }
-
-  const handleCloseModal = () => {
-    setModalOpen(false)
-    setInterviewConfig(null)
   }
 
   return (
     <div className="app">
-      <LandingPage onStart={handleStartInterview} />
-      {modalOpen && (
-        <InterviewModal
-          config={interviewConfig}
-          onClose={handleCloseModal}
-        />
-      )}
+      <div className="app__inner">
+        <Header />
+        <main className="app__main">
+          <WeatherBanner />
+          <TaskSelector onCheck={handleCheck} />
+        </main>
+        <Footer />
+        {modalOpen && (
+          <ResultModal
+            task={selectedTask}
+            duration={duration}
+            onClose={() => setModalOpen(false)}
+          />
+        )}
+      </div>
     </div>
   )
 }

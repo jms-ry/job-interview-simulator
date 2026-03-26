@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500&display=swap');
 
 *, *::before, *::after {
   box-sizing: border-box;
@@ -7,29 +7,42 @@
 }
 
 :root {
-  --navy:        #0D1B2A;
-  --navy-light:  #162436;
-  --navy-mid:    #1E3148;
-  --amber:       #E8A838;
-  --amber-light: #F2C46D;
-  --amber-dim:   #A87520;
-  --cream:       #F5F0E8;
-  --cream-dark:  #E8E0D0;
-  --muted:       #8A9BAE;
-  --muted-light: #B0BEC8;
-  --white:       #FFFFFF;
-  --danger:      #C0392B;
+  --bg:         #111410;
+  --bg2:        #181C14;
+  --bg3:        #1F241A;
+  --bg4:        #262C1F;
+  --border:     rgba(255,255,255,0.06);
+  --border2:    rgba(255,255,255,0.11);
 
-  --font-display: 'DM Serif Display', Georgia, serif;
-  --font-body:    'DM Sans', system-ui, sans-serif;
+  --green:      #4CAF50;
+  --green-l:    #81C784;
+  --green-d:    #2E7D32;
+  --green-bg:   rgba(76,175,80,0.1);
+  --green-bg2:  rgba(76,175,80,0.16);
 
-  --radius-sm:  6px;
+  --amber:      #FFB300;
+  --amber-l:    #FFD54F;
+  --amber-bg:   rgba(255,179,0,0.1);
+  --amber-bg2:  rgba(255,179,0,0.16);
+
+  --red:        #EF5350;
+  --red-bg:     rgba(239,83,80,0.1);
+  --red-bg2:    rgba(239,83,80,0.16);
+
+  --sky:        #4FC3F7;
+  --sky-bg:     rgba(79,195,247,0.08);
+
+  --cream:      #E8E0D0;
+  --muted:      #7A8070;
+  --muted-l:    #A8A89A;
+
+  --font-display: 'Syne', sans-serif;
+  --font-body:    'Inter', sans-serif;
+
+  --radius-sm:  8px;
   --radius-md:  12px;
-  --radius-lg:  20px;
-  --radius-xl:  28px;
-
-  --shadow-card: 0 2px 24px rgba(0,0,0,0.18), 0 1px 4px rgba(0,0,0,0.12);
-  --shadow-modal: 0 8px 64px rgba(0,0,0,0.5), 0 2px 16px rgba(0,0,0,0.3);
+  --radius-lg:  18px;
+  --radius-xl:  24px;
 }
 
 html, body, #root {
@@ -38,14 +51,22 @@ html, body, #root {
 
 body {
   font-family: var(--font-body);
-  background-color: var(--navy);
+  background: var(--bg);
   color: var(--cream);
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
-}
-
-.app {
-  min-height: 100vh;
+  background-image:
+    linear-gradient(rgba(76,175,80,0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(76,175,80,0.08) 1px, transparent 1px),
+    radial-gradient(circle, rgba(76,175,80,0.25) 1px, transparent 1px);
+  background-size:
+    48px 48px,
+    48px 48px,
+    96px 96px;
+  background-position:
+    0 0,
+    0 0,
+    24px 24px;
 }
 
 button {
@@ -55,7 +76,7 @@ button {
   outline: none;
 }
 
-input {
+input, textarea {
   font-family: var(--font-body);
   outline: none;
 }

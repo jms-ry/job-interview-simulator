@@ -1,0 +1,207 @@
+.task-selector {
+  margin: 0 18px;
+  padding-top: 20px;
+}
+
+.task-selector__section-label {
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--muted-l);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  margin-bottom: 12px;
+}
+
+.task-selector__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.task-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 14px 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+  transition: border-color 0.18s, background 0.18s;
+  text-align: center;
+}
+
+.task-card:hover:not(.task-card--active) {
+  border-color: var(--border2);
+  background: var(--bg3);
+}
+
+.task-card--active {
+  border-color: rgba(76, 175, 80, 0.5);
+  background: var(--green-bg);
+}
+
+.task-card__emoji {
+  font-size: 26px;
+  line-height: 1;
+}
+
+.task-card__name {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--cream);
+  line-height: 1.3;
+}
+
+.task-card--active .task-card__name {
+  color: var(--green-l);
+}
+
+.task-card__category {
+  font-size: 10px;
+  color: var(--muted);
+}
+
+.task-selector__custom {
+  margin-bottom: 20px;
+}
+
+.task-selector__custom-field {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--bg2);
+  border: 1.5px solid var(--border2);
+  border-radius: var(--radius-md);
+  padding: 11px 14px;
+  transition: border-color 0.18s;
+}
+
+.task-selector__custom-field:focus-within {
+  border-color: rgba(76, 175, 80, 0.4);
+}
+
+.task-selector__custom-icon {
+  font-size: 15px;
+  flex-shrink: 0;
+}
+
+.task-selector__custom-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  font-size: 13px;
+  color: var(--cream);
+  min-width: 0;
+}
+
+.task-selector__custom-input::placeholder {
+  color: var(--muted);
+}
+
+.task-selector__duration-label {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 8px;
+}
+
+.task-selector__duration-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.duration-btn {
+  flex: 1;
+  background: var(--bg3);
+  border: 1px solid var(--border2);
+  border-radius: var(--radius-md);
+  padding: 10px 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  cursor: pointer;
+  transition: border-color 0.18s, background 0.18s;
+}
+
+.duration-btn:hover:not(.duration-btn--active) {
+  border-color: var(--border2);
+  background: var(--bg4);
+}
+
+.duration-btn--active {
+  background: var(--green-bg2);
+  border-color: rgba(76, 175, 80, 0.45);
+}
+
+.duration-btn__label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--cream);
+}
+
+.duration-btn--active .duration-btn__label {
+  color: var(--green-l);
+}
+
+.duration-btn__sub {
+  font-size: 10px;
+  color: var(--muted);
+}
+
+.task-selector__cta {
+  width: 100%;
+  padding: 14px;
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border2);
+  color: var(--muted);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 0.02em;
+  cursor: not-allowed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: all 0.18s;
+}
+
+.task-selector__cta--active {
+  background: linear-gradient(135deg, var(--green-d), var(--green));
+  border-color: transparent;
+  color: #0A1208;
+  cursor: pointer;
+}
+
+.task-selector__cta--active:hover {
+  filter: brightness(1.08);
+  transform: translateY(-1px);
+}
+
+.task-selector__cta--active:active {
+  transform: translateY(0);
+}
+
+.task-selector__cta-arrow {
+  font-size: 1.1rem;
+  transition: transform 0.18s;
+}
+
+.task-selector__cta--active:hover .task-selector__cta-arrow {
+  transform: translateX(3px);
+}
+
+@media (max-width: 380px) {
+  .task-selector__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

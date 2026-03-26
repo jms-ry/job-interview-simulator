@@ -1,0 +1,40 @@
+.footer {
+  padding: 0 18px 24px;
+  margin-top: 8px;
+}
+
+.footer__disclaimer {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  background: var(--sky-bg);
+  border: 1px solid rgba(79, 195, 247, 0.12);
+  border-radius: var(--radius-md);
+  padding: 12px 14px;
+  margin-bottom: 14px;
+}
+
+.footer__disclaimer-icon {
+  font-size: 14px;
+  color: var(--sky);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.footer__disclaimer-text {
+  font-size: 11px;
+  color: var(--muted-l);
+  line-height: 1.7;
+}
+
+.footer__disclaimer-text strong {
+  color: var(--sky);
+  font-weight: 500;
+}
+
+.footer__credit {
+  text-align: center;
+  font-size: 11px;
+  color: var(--muted);
+  opacity: 0.5;
+}
