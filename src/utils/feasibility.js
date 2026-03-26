@@ -373,7 +373,7 @@ function findBestWindow(hourlyData, durationValue, profile, startTime, startMode
   const futureHours = hourlyData.filter(h => {
     const hTime = new Date(h.time + ':00+08:00')
     const hour = hTime.getHours()
-    return hTime >= now && hour >= 6 && hour < 18
+    return hTime >= now && hour >= 5 && hour < 18
   })
 
   let bestStart = null
