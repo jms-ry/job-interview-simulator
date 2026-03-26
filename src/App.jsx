@@ -62,6 +62,7 @@ function App() {
             duration={duration}
             startTime={startTime}
             startMode={startMode}
+            weather={weather}
             onClose={() => setModalOpen(false)}
           />
         )}
