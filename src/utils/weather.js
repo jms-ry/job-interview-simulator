@@ -20,7 +20,7 @@ export async function fetchWeather(lat, lon) {
       'relative_humidity_2m',
     ].join(','),
     timezone: 'Asia/Manila',
-    forecast_days: 2,
+    forecast_days: 3,
   })
 
   const response = await fetch(`${OPEN_METEO_URL}?${params}`)
@@ -56,7 +56,7 @@ function mapHourly(hourly) {
   for (let i = 0; i < hourly.time.length; i++) {
     const time = new Date(hourly.time[i] + ':00+08:00')
     if (time < now) continue
-    if (results.length >= 24) break
+    if (results.length >= 72) break
 
     const hour = time.getHours()
 

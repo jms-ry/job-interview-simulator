@@ -142,10 +142,10 @@ export default function ResultModal({ task, duration, startTime, startMode, weat
                 <span className="modal__best-time-icon">💡</span>
                 <div>
                   <div className="modal__best-time-title">
-                    Best window today: {result.bestTime.label}
+                    Better window: {result.bestTime.label}
                   </div>
                   <div className="modal__best-time-sub">
-                    Rain {result.bestTime.rain}% · Wind {result.bestTime.wind} km/h · Humidity {result.bestTime.humidity}% — optimal conditions for this task.
+                    Rain {result.bestTime.rain}% · Wind {result.bestTime.wind} km/h · Humidity {result.bestTime.humidity}% — consider rescheduling to this window for better results.
                   </div>
                 </div>
               </div>

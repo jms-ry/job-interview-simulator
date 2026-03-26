@@ -394,12 +394,29 @@ function findBestWindow(hourlyData, durationValue, profile, startTime, startMode
 
   const startDate = new Date(bestStart.time + ':00+08:00')
   const endDate = new Date(startDate.getTime() + duration * 60 * 60 * 1000)
+  const today = new Date()
+  const tomorrow = new Date(today)
+  tomorrow.setDate(today.getDate() + 1)
+
+  const isToday = startDate.toDateString() === today.toDateString()
+  const isTomorrow = startDate.toDateString() === tomorrow.toDateString()
+
+  let dayLabel
+  if (isToday) {
+    dayLabel = 'Today'
+  } else if (isTomorrow) {
+    dayLabel = 'Tomorrow'
+  } else {
+    dayLabel = startDate.toLocaleDateString('en-PH', { weekday: 'long', month: 'short', day: 'numeric' })
+  }
 
   return {
-    label: `${formatTime(startDate)} – ${formatTime(endDate)}`,
+    label: `${dayLabel}, ${formatTime(startDate)} – ${formatTime(endDate)}`,
     rain: Math.round(bestStart.rain),
     wind: Math.round(bestStart.wind),
     humidity: Math.round(bestStart.humidity),
+    isToday,
+    isTomorrow,
   }
 }
 
