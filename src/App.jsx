@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Analytics } from "@vercel/analytics/react"
 import Header from './components/Header'
 import WeatherBanner from './components/WeatherBanner'
 import TaskSelector from './components/TaskSelector'
@@ -42,6 +43,7 @@ function App() {
   return (
     <div className="app">
       <div className="app__inner">
+        <Analytics/>
         <Header
           onLocationSelect={handleLocationSelect}
           locationLabel={locationLabel}
