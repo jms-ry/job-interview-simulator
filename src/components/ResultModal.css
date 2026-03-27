@@ -364,23 +364,3 @@
 .modal__night-plan strong {
   color: var(--green-l);
 }
-
-.modal__night-close {
-  margin-top: 8px;
-  background: var(--bg3);
-  border: 1px solid var(--border2);
-  border-radius: var(--radius-md);
-  color: var(--cream);
-  font-size: 14px;
-  font-weight: 600;
-  font-family: var(--font-body);
-  padding: 12px 32px;
-  cursor: pointer;
-  transition: all 0.18s;
-}
-
-.modal__night-close:hover {
-  background: var(--amber-bg2);
-  border-color: rgba(255,179,0,0.3);
-  color: var(--amber-l);
-}

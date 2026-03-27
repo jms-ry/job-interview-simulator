@@ -130,9 +130,6 @@ export default function ResultModal({ task, duration, startTime, startMode, weat
             <p className="modal__night-plan">
               Come back tomorrow and we'll help you plan your day right — starting at the best time for <strong>{task}</strong>.
             </p>
-            <button className="modal__night-close" onClick={onClose}>
-              Good night 🌙
-            </button>
           </div>
         ) : result && (
           <div className="modal__scroll">
