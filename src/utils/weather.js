@@ -125,11 +125,10 @@ export function getIconForTime(code, hour) {
 }
 
 function calculateHeatIndex(tempC, humidity) {
-  const T = tempC
+  const T = tempC * 9/5 + 32
   const RH = humidity
 
-  // Only meaningful above 27°C
-  if (T < 27) return T
+  if (T < 80) return tempC
 
   const HI =
     -42.379 +
@@ -142,7 +141,7 @@ function calculateHeatIndex(tempC, humidity) {
     0.00085282 * T * RH * RH -
     0.00000199 * T * T * RH * RH
 
-  return Math.round(HI)
+  return Math.round((HI - 32) * 5/9)
 }
 
 export function getHeatIndexLevel(hi) {

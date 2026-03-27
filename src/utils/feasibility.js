@@ -4,7 +4,7 @@ function calculateHeatIndex(tempC, humidity) {
   const RH = humidity
 
   if (T < 80) return tempC
-  
+
   const HI =
     -42.379 +
     2.04901523 * T +
@@ -14,7 +14,7 @@ function calculateHeatIndex(tempC, humidity) {
     0.05481717 * RH * RH +
     0.00122874 * T * T * RH +
     0.00085282 * T * RH * RH -
-  0.00000199 * T * T * RH * RH
+    0.00000199 * T * T * RH * RH
 
   return Math.round((HI - 32) * 5/9)
 }
