@@ -25,13 +25,6 @@ function getHIVerdict(hi) {
   return 'good'
 }
 
-function getHILabel(hi) {
-  if (hi > 51) return `Extreme Danger heat index (${hi}°C) — do not work outdoors`
-  if (hi > 41) return `Dangerous heat index (${hi}°C) — risk of heat stroke`
-  if (hi > 32) return `High heat index (${hi}°C) — take regular breaks and hydrate`
-  return null
-}
-
 // ─── TIME OF DAY ──────────────────────────────────────────────────────────────
 const OPTIMAL_HOURS = {
   'pesticide-spraying':  [[5, 8], [16, 18]],
@@ -47,19 +40,6 @@ function isOptimalTime(taskId, hour) {
   const ranges = OPTIMAL_HOURS[taskId]
   if (!ranges) return true
   return ranges.some(([start, end]) => hour >= start && hour < end)
-}
-
-function getOptimalTimeLabel(taskId) {
-  const ranges = OPTIMAL_HOURS[taskId]
-  if (!ranges) return null
-  return ranges.map(([s, e]) => `${formatHour(s)}–${formatHour(e)}`).join(' or ')
-}
-
-function formatHour(h) {
-  if (h === 0 || h === 24) return '12:00 AM'
-  if (h < 12) return `${h}:00 AM`
-  if (h === 12) return '12:00 PM'
-  return `${h - 12}:00 PM`
 }
 
 // ─── ACTIVITY PROFILES ────────────────────────────────────────────────────────
@@ -418,7 +398,7 @@ export function analyzeFeasibility(taskName, startTime, startMode, durationValue
 
   return {
     verdict: finalVerdict,
-    verdictLabel: getVerdictLabel(finalVerdict, profile, timeIsOptimal, maxHI, cloudVerdict),
+    verdictLabel: getVerdictLabel(finalVerdict, timeIsOptimal, maxHI, cloudVerdict),
     verdictSub: getVerdictSub(finalVerdict, profile, window, maxHI, timeIsOptimal, cloudVerdict),
     hourly: window,
     factors: buildFactors(window, profile),
@@ -454,7 +434,7 @@ function determineSunVerdict(window) {
 }
 
 // ─── VERDICT LABELS ───────────────────────────────────────────────────────────
-function getVerdictLabel(verdict, profile, timeIsOptimal, maxHI, cloudVerdict) {
+function getVerdictLabel(verdict, timeIsOptimal, maxHI, cloudVerdict) {
   if (verdict === 'bad')     return 'Not Recommended — Consider Rescheduling'
   if (verdict === 'risky')   return 'Risky — Proceed with Caution'
   if (verdict === 'caution') {
@@ -470,20 +450,26 @@ function getVerdictSub(verdict, profile, window, maxHI, timeIsOptimal, cloudVerd
   if (verdict === 'good') return `Conditions look favorable for ${profile.name}.`
 
   const issues = []
-  const maxRain = Math.max(...window.map(h => h.rain))
-  const maxWind = Math.max(...window.map(h => h.wind))
+  const maxRain     = Math.max(...window.map(h => h.rain))
+  const maxWind     = Math.max(...window.map(h => h.wind))
   const maxHumidity = Math.max(...window.map(h => h.humidity))
 
-  if (maxRain >= profile.rain.risky)     issues.push(`high rain chance (${maxRain}%)`)
-  if (maxWind >= profile.wind.risky)     issues.push(`strong wind (${maxWind} km/h)`)
-  if (maxHumidity >= profile.humidity.risky) issues.push(`high humidity (${maxHumidity}%)`)
-  if (maxHI > 32)                        issues.push(`high heat index (${maxHI}°C)`)
-  if (!timeIsOptimal && profile.tips.time) issues.push('non-optimal time of day')
-  if (cloudVerdict !== 'good')           issues.push('insufficient sunlight for drying')
+  if (maxRain >= profile.rain.bad)           issues.push(`high rain chance (${maxRain}%)`)
+  else if (maxRain >= profile.rain.risky)    issues.push(`moderate rain chance (${maxRain}%)`)
 
-  return issues.length > 0
-    ? `Due to ${issues.join(' and ')} in your window.`
-    : `Conditions are borderline for ${profile.name}.`
+  if (maxWind >= profile.wind.bad)           issues.push(`strong wind (${maxWind} km/h)`)
+  else if (maxWind >= profile.wind.risky)    issues.push(`moderate wind (${maxWind} km/h)`)
+
+  if (maxHumidity >= profile.humidity.bad)   issues.push(`high humidity (${maxHumidity}%)`)
+  else if (maxHumidity >= profile.humidity.risky) issues.push(`moderate humidity (${maxHumidity}%)`)
+
+  if (maxHI > 41)       issues.push(`dangerous heat index (${maxHI}°C)`)
+  else if (maxHI > 32)  issues.push(`elevated heat index (${maxHI}°C)`)
+
+  if (!timeIsOptimal && profile.tips.time) issues.push('non-optimal time of day')
+  if (cloudVerdict !== 'good')             issues.push('insufficient sunlight for drying')
+
+  return issues.length > 0 ? `Due to ${issues.join(' and ')} in your window.` : `Conditions are borderline for ${profile.name}.`
 }
 
 // ─── FACTORS ─────────────────────────────────────────────────────────────────
