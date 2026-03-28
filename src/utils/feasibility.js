@@ -47,6 +47,7 @@ const ACTIVITY_PROFILES = {
   'transplanting': {
     name: 'Transplanting',
     rain:     { risky: 40, bad: 70 },
+    precip:   { risky: 1.0, bad: 5.0 },
     wind:     { risky: 25, bad: 40 },
     humidity: { risky: 85, bad: 95 },
     hi:       { caution: 33, bad: 42 },
@@ -67,6 +68,7 @@ const ACTIVITY_PROFILES = {
   'seed-sowing': {
     name: 'Seed Sowing',
     rain:     { risky: 35, bad: 65 },
+    precip:   { risky: 1.0, bad: 5.0 },
     wind:     { risky: 20, bad: 35 },
     humidity: { risky: 88, bad: 95 },
     hi:       { caution: 34, bad: 42 },
@@ -87,6 +89,7 @@ const ACTIVITY_PROFILES = {
   'pesticide-spraying': {
     name: 'Pesticide Spraying',
     rain:     { risky: 25, bad: 50 },
+    precip:   { risky: 0.2, bad: 1.0 },
     wind:     { risky: 15, bad: 25 },
     humidity: { risky: 85, bad: 92 },
     hi:       { caution: 33, bad: 41 },
@@ -107,6 +110,7 @@ const ACTIVITY_PROFILES = {
   'fertilizer-applying': {
     name: 'Fertilizer Applying',
     rain:     { risky: 30, bad: 55 },
+    precip:   { risky: 0.5, bad: 3.0 },
     wind:     { risky: 25, bad: 40 },
     humidity: { risky: 90, bad: 97 },
     hi:       { caution: 34, bad: 42 },
@@ -127,6 +131,7 @@ const ACTIVITY_PROFILES = {
   'irrigation': {
     name: 'Irrigation',
     rain:     { risky: 30, bad: 50 },
+    precip:   { risky: 2.0, bad: 8.0 },
     wind:     { risky: 20, bad: 35 },
     humidity: { risky: 88, bad: 95 },
     hi:       { caution: 35, bad: 43 },
@@ -147,6 +152,7 @@ const ACTIVITY_PROFILES = {
   'rice-harvesting': {
     name: 'Rice Harvesting',
     rain:     { risky: 20, bad: 40 },
+    precip:   { risky: 2.0, bad: 8.0 },
     wind:     { risky: 30, bad: 50 },
     humidity: { risky: 80, bad: 90 },
     hi:       { caution: 34, bad: 42 },
@@ -167,6 +173,7 @@ const ACTIVITY_PROFILES = {
   'fruit-picking': {
     name: 'Fruit Picking',
     rain:     { risky: 30, bad: 60 },
+    precip:   { risky: 0.5, bad: 3.0 },
     wind:     { risky: 25, bad: 45 },
     humidity: { risky: 85, bad: 93 },
     hi:       { caution: 33, bad: 41 },
@@ -187,6 +194,7 @@ const ACTIVITY_PROFILES = {
   'plowing': {
     name: 'Plowing',
     rain:     { risky: 40, bad: 70 },
+    precip:   { risky: 2.0, bad: 8.0 },
     wind:     { risky: 40, bad: 65 },
     humidity: { risky: 92, bad: 98 },
     hi:       { caution: 35, bad: 43 },
@@ -207,6 +215,7 @@ const ACTIVITY_PROFILES = {
   'composting': {
     name: 'Composting',
     rain:     { risky: 70, bad: 90 },
+    precip:   { risky: 5.0, bad: 15.0 },
     wind:     { risky: 50, bad: 70 },
     humidity: { risky: 93, bad: 98 },
     hi:       { caution: 36, bad: 44 },
@@ -227,6 +236,7 @@ const ACTIVITY_PROFILES = {
   'sun-drying': {
     name: 'Sun Drying Grains',
     rain:     { risky: 25, bad: 45 },
+    precip:   { risky: 0.1, bad: 0.5 },
     wind:     { risky: 35, bad: 55 },
     humidity: { risky: 70, bad: 82 },
     hi:       { caution: 38, bad: 52 },
@@ -249,6 +259,7 @@ const ACTIVITY_PROFILES = {
   'threshing': {
     name: 'Threshing',
     rain:     { risky: 25, bad: 50 },
+    precip:   { risky: 0.5, bad: 2.0 },
     wind:     { risky: 20, bad: 35 },
     humidity: { risky: 82, bad: 90 },
     hi:       { caution: 35, bad: 43 },
@@ -269,6 +280,7 @@ const ACTIVITY_PROFILES = {
   'grazing': {
     name: 'Livestock Grazing',
     rain:     { risky: 55, bad: 80 },
+    precip:   { risky: 3.0, bad: 10.0 },
     wind:     { risky: 35, bad: 55 },
     humidity: { risky: 88, bad: 95 },
     hi:       { caution: 34, bad: 42 },
@@ -290,6 +302,7 @@ const ACTIVITY_PROFILES = {
 const GENERIC_OUTDOOR_PROFILE = {
   name: 'Outdoor Farm Task',
   rain:     { risky: 40, bad: 70 },
+  precip: { risky: 1.0, bad: 5.0 },
   wind:     { risky: 30, bad: 50 },
   humidity: { risky: 88, bad: 95 },
   hi:       { caution: 33, bad: 42 },
@@ -402,6 +415,9 @@ export function analyzeFeasibility(taskName, startTime, startMode, durationValue
     }
   }
 
+  // Precipitation verdict 
+  const precipVerdict = determinePrecipVerdict(window, profile)
+
   // Wind direction check for pesticide spraying
   const windDirRisk = profile.id === 'pesticide-spraying' ? checkWindDirectionRisk(window) : { risky: false, shifting: false, dominantDir: null }
 
@@ -417,18 +433,23 @@ export function analyzeFeasibility(taskName, startTime, startMode, durationValue
 
   // Combine all verdicts — worst wins
   const verdictOrder = ['good', 'caution', 'risky', 'bad']
-  const finalVerdict = [weatherVerdict, hiVerdict, cloudVerdict, timeIsOptimal ? 'good' : 'caution', 
-    consecutiveVerdict]
-  .reduce((worst, v) => verdictOrder.indexOf(v) > verdictOrder.indexOf(worst) ? v : worst, 'good')
+  const finalVerdict = [
+    weatherVerdict, 
+    hiVerdict, 
+    cloudVerdict, 
+    timeIsOptimal ? 'good' : 'caution', 
+    consecutiveVerdict,
+    precipVerdict,
+  ].reduce((worst, v) => verdictOrder.indexOf(v) > verdictOrder.indexOf(worst) ? v : worst, 'good')
 
   const bestWindow = findBestWindow(hourlyData, durationValue, profile, startTime, startMode)
   const showBestWindow = finalVerdict !== 'good' ? bestWindow : null
-  const tips = buildTips(profile, window, maxHI, timeIsOptimal, cloudVerdict, consecutiveVerdict, windDirRisk, isDawnStart)
+  const tips = buildTips(profile, window, maxHI, timeIsOptimal, cloudVerdict, consecutiveVerdict, windDirRisk, isDawnStart, precipVerdict)
 
   return {
     verdict: finalVerdict,
     verdictLabel: getVerdictLabel(finalVerdict, timeIsOptimal, maxHI, cloudVerdict),
-    verdictSub: getVerdictSub(finalVerdict, profile, window, maxHI, timeIsOptimal, cloudVerdict,consecutiveVerdict),
+    verdictSub: getVerdictSub(finalVerdict, profile, window, maxHI, timeIsOptimal, cloudVerdict,consecutiveVerdict, precipVerdict),
     hourly: window,
     factors: buildFactors(window, profile),
     bestTime: showBestWindow,
@@ -448,6 +469,23 @@ function determineWeatherVerdict(window, profile) {
     if (hour.rain >= profile.rain.risky || hour.wind >= profile.wind.risky || hour.humidity >= profile.humidity.risky)
       return 'risky'
   }
+  return 'good'
+}
+
+// PRECIPITATION VERDICT
+function determinePrecipVerdict(window, profile) {
+  if (!profile.precip) return 'good'
+
+  for (const hour of window) {
+    const mm = hour.precipitation ?? 0
+    if (mm >= profile.precip.bad) return 'bad'
+  }
+
+  for (const hour of window) {
+    const mm = hour.precipitation ?? 0
+    if (mm >= profile.precip.risky) return 'risky'
+  }
+
   return 'good'
 }
 
@@ -513,7 +551,7 @@ function getVerdictLabel(verdict, timeIsOptimal, maxHI, cloudVerdict) {
   return 'Good to Go!'
 }
 
-function getVerdictSub(verdict, profile, window, maxHI, timeIsOptimal, cloudVerdict,consecutiveVerdict) {
+function getVerdictSub(verdict, profile, window, maxHI, timeIsOptimal, cloudVerdict,consecutiveVerdict, precipVerdict) {
   if (verdict === 'good') return `Conditions look favorable for ${profile.name}.`
 
   const issues = []
@@ -536,6 +574,12 @@ function getVerdictSub(verdict, profile, window, maxHI, timeIsOptimal, cloudVerd
   if (!timeIsOptimal && profile.tips.time) issues.push('non-optimal time of day')
   if (cloudVerdict !== 'good')             issues.push('insufficient sunlight for drying')
   if (consecutiveVerdict !== 'good') issues.push('no consecutive dry hours in window')
+  
+  if (precipVerdict !== 'good') {
+    const maxPrecip = Math.max(...window.map(h => h.precipitation ?? 0))
+    if (precipVerdict === 'bad')   issues.push(`heavy rainfall (${maxPrecip.toFixed(1)} mm/hr)`)
+    else                           issues.push(`light rainfall (${maxPrecip.toFixed(1)} mm/hr)`)
+  }
 
   return issues.length > 0 ? `Due to ${formatIssues(issues)} in your window.` : `Conditions are borderline for ${profile.name}.`
 }
@@ -550,6 +594,8 @@ export function buildFactors(window, profile) {
   ]
 
   const maxRain     = Math.max(...window.map(h => h.rain))
+  const maxPrecip = Math.max(...window.map(h => h.precipitation ?? 0))
+  const precipLabel = maxPrecip >= 1 ? `${maxRain}% / ${maxPrecip.toFixed(1)}mm` : `${maxRain}%`
   const maxWind     = Math.max(...window.map(h => h.wind))
   const maxHumidity = Math.max(...window.map(h => h.humidity))
   const maxHI       = Math.max(...window.map(h => h.heatIndex ?? calculateHeatIndex(h.temp, h.humidity)))
@@ -562,7 +608,7 @@ export function buildFactors(window, profile) {
   const humidityLevel = maxHumidity >= (profile?.humidity?.bad ?? 90) ? 'bad' : maxHumidity >= (profile?.humidity?.risky ?? 80) ? 'warn' : 'ok'
 
   const factors = [
-    { icon: '🌧', label: 'Rain',       value: `${maxRain}%`,    level: rainLevel      },
+    { icon: '🌧', label: 'Rain',       value: precipLabel,      level: rainLevel      },
     { icon: '💨', label: 'Wind',       value: `${maxWind}km/h`, level: windLevel      },
     { icon: '💧', label: 'Humidity',   value: `${maxHumidity}%`,level: humidityLevel  },
     { icon: '🌡', label: 'Heat Index', value: `${maxHI}°C`,     level: getHILevel(maxHI) },
@@ -585,7 +631,7 @@ export function buildFactors(window, profile) {
 function getHILevel(v)       { return v > 41  ? 'bad' : v > 32  ? 'warn' : 'ok' }
 
 // TIPS  
-function buildTips(profile, window, maxHI, timeIsOptimal, cloudVerdict, consecutiveVerdict, windDirRisk, isDawnStart) {
+function buildTips(profile, window, maxHI, timeIsOptimal, cloudVerdict, consecutiveVerdict, windDirRisk, isDawnStart, precipVerdict) {
   const tips = [...profile.tips.base]
   const maxRain     = Math.max(...window.map(h => h.rain))
   const maxWind     = Math.max(...window.map(h => h.wind))
@@ -620,6 +666,19 @@ function buildTips(profile, window, maxHI, timeIsOptimal, cloudVerdict, consecut
     tips.push({
       icon: '🌄',
       text: `Starting before 6 AM means low visibility — bring a flashlight or headlamp. Sunrise in Leyte is around 5:30–6:00 AM.`,
+    })
+  }
+
+  if (precipVerdict !== 'good') {
+    const maxPrecip = Math.max(...window.map(h => h.precipitation ?? 0))
+    const severity = precipVerdict === 'bad' ? 'heavy' : 'light'
+    tips.push({
+      icon: '🌧',
+      text: `${severity === 'heavy' ? 'Heavy' : 'Light'} rainfall (${maxPrecip.toFixed(1)} mm/hr) is expected during your window — ${
+        severity === 'heavy'
+          ? 'this will significantly disrupt your task and may cause damage.'
+          : 'even light rain can affect this task. Monitor conditions closely.'
+      }`,
     })
   }
 

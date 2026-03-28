@@ -15,6 +15,7 @@ export async function fetchWeather(lat, lon) {
     hourly: [
       'temperature_2m',
       'precipitation_probability',
+      'precipitation',
       'weather_code',
       'wind_speed_10m',
       'wind_direction_10m',
@@ -73,6 +74,7 @@ function mapHourly(hourly) {
       code: hourly.weather_code[i],
       icon: getIconForTime(hourly.weather_code[i], hour),
       level: getRainLevel(hourly.precipitation_probability[i]),
+      precipitation: hourly.precipitation?.[i] ?? 0,
       heatIndex: calculateHeatIndex(
         Math.round(hourly.temperature_2m[i]),
         hourly.relative_humidity_2m[i]
