@@ -34,6 +34,10 @@ const OPTIMAL_HOURS = {
   'rice-harvesting':     [[5, 11]],
   'irrigation':          [[5, 8], [17, 18]],
   'sun-drying':          [[8, 16]],
+  'seed-sowing':         [[5, 9]],
+  'plowing':             [[5, 10]],
+  'threshing':           [[5, 14]],
+  'grazing':             [[5, 9], [16, 18]],
 }
 
 function isOptimalTime(taskId, hour) {
@@ -82,7 +86,7 @@ const ACTIVITY_PROFILES = {
       wind:     'Wind can scatter lightweight seeds and dry out the seedbed.',
       humidity: 'Excessive humidity after sowing may lead to seed rot before germination.',
       heat:     'High temperatures reduce germination rates — sow during cooler parts of the day.',
-      time:     null,
+      time: 'Seed sowing is best done in the early morning (5–9 AM) before midday heat dries out the topsoil.',
     },
   },
 
@@ -208,7 +212,7 @@ const ACTIVITY_PROFILES = {
       wind:     'High wind causes significant topsoil erosion during and after plowing.',
       humidity: 'Extremely humid conditions make heavy clay soils too sticky for effective plowing.',
       heat:     'High heat index during plowing increases operator heat exhaustion risk — take frequent breaks.',
-      time:     null,
+      time: 'Plowing is best done in the early morning (5–10 AM) to avoid peak heat and reduce operator heat exhaustion risk.',
     },
   },
 
@@ -273,7 +277,7 @@ const ACTIVITY_PROFILES = {
       wind:     'Wind scatters grain during threshing and reduces recovery efficiency.',
       humidity: 'High humidity during threshing causes grain to absorb moisture, reducing quality.',
       heat:     'Work in shaded or ventilated areas during high heat — take breaks and hydrate.',
-      time:     null,
+      time: 'Threshing is best done in the morning to early afternoon (5 AM–2 PM) — late afternoon humidity can increase grain moisture absorption.',
     },
   },
 
@@ -294,7 +298,7 @@ const ACTIVITY_PROFILES = {
       wind:     'Strong wind causes stress in livestock, especially young animals.',
       humidity: 'Very high humidity combined with heat causes heat stress in cattle and other livestock.',
       heat:     'High heat index stresses livestock — ensure shade access and limit grazing to early morning and evening.',
-      time:     null,
+      time: 'Grazing is best during early morning (5–9 AM) or late afternoon (4–6 PM) to avoid heat stress on animals during peak midday temperatures.',
     },
   },
 }
