@@ -674,7 +674,7 @@ function findBestWindow(hourlyData, durationValue, profile, startTime, startMode
 
     // Prefer optimal hours for this task
     const startHour = new Date(window[0].time + ':00+08:00').getHours()
-    const timeBonus = isOptimalTime(profile.id, startHour) ? 0 : 0.5
+    const timeBonus = isOptimalTime(profile.id, startHour) ? 0 : 2
 
     const hi = Math.max(...window.map(h => h.heatIndex ?? calculateHeatIndex(h.temp, h.humidity)))
     const hiPenalty = hi > 41 ? 2 : hi > 32 ? 0.5 : 0
