@@ -226,7 +226,7 @@ const ACTIVITY_PROFILES = {
 
   'sun-drying': {
     name: 'Sun Drying Grains',
-    rain:     { risky: 15, bad: 30 },
+    rain:     { risky: 25, bad: 45 },
     wind:     { risky: 35, bad: 55 },
     humidity: { risky: 70, bad: 82 },
     hi:       { caution: 38, bad: 52 },
@@ -509,19 +509,33 @@ export function buildFactors(window, profile) {
   const maxWind     = Math.max(...window.map(h => h.wind))
   const maxHumidity = Math.max(...window.map(h => h.humidity))
   const maxHI       = Math.max(...window.map(h => h.heatIndex ?? calculateHeatIndex(h.temp, h.humidity)))
+  const worstCode   = Math.max(...window.map(h => h.weatherCode ?? 0))
 
-  const rainLevel = maxRain >= (profile?.rain?.bad ?? 60)   ? 'bad': maxRain >= (profile?.rain?.risky ?? 35)  ? 'warn' : 'ok'
+  const rainLevel = maxRain >= (profile?.rain?.bad ?? 60) ? 'bad' : maxRain >= (profile?.rain?.risky ?? 35) ? 'warn' : 'ok'
 
-  const windLevel = maxWind >= (profile?.wind?.bad ?? 40)   ? 'bad': maxWind >= (profile?.wind?.risky ?? 25)  ? 'warn' : 'ok'
+  const windLevel = maxWind >= (profile?.wind?.bad ?? 40) ? 'bad' : maxWind >= (profile?.wind?.risky ?? 25) ? 'warn' : 'ok'
 
-  const humidityLevel = maxHumidity >= (profile?.humidity?.bad ?? 90)   ? 'bad': maxHumidity >= (profile?.humidity?.risky ?? 80)  ? 'warn' : 'ok'
+  const humidityLevel = maxHumidity >= (profile?.humidity?.bad ?? 90) ? 'bad' : maxHumidity >= (profile?.humidity?.risky ?? 80) ? 'warn' : 'ok'
 
-  return [
-    { icon: '🌧', label: 'Rain',       value: `${maxRain}%`,    level: rainLevel     },
-    { icon: '💨', label: 'Wind',       value: `${maxWind}km/h`, level: windLevel     },
-    { icon: '💧', label: 'Humidity',   value: `${maxHumidity}%`,level: humidityLevel },
+  const factors = [
+    { icon: '🌧', label: 'Rain',       value: `${maxRain}%`,    level: rainLevel      },
+    { icon: '💨', label: 'Wind',       value: `${maxWind}km/h`, level: windLevel      },
+    { icon: '💧', label: 'Humidity',   value: `${maxHumidity}%`,level: humidityLevel  },
     { icon: '🌡', label: 'Heat Index', value: `${maxHI}°C`,     level: getHILevel(maxHI) },
   ]
+
+  if (profile?.requiresSun) {
+    const cloudLevel = worstCode >= 3 ? 'bad' : worstCode === 2 ? 'warn' : 'ok'
+    const cloudLabel = worstCode >= 3 ? 'Overcast' : worstCode === 2 ? 'Partly Cloudy' : 'Clear'
+    factors.push({
+      icon: worstCode >= 3 ? '☁️' : worstCode === 2 ? '⛅' : '☀️',
+      label: 'Sky Cover',
+      value: cloudLabel,
+      level: cloudLevel,
+    })
+  }
+
+  return factors
 }
 
 function getHILevel(v)       { return v > 41  ? 'bad' : v > 32  ? 'warn' : 'ok' }
