@@ -1,4 +1,4 @@
-// ─── HEAT INDEX ───────────────────────────────────────────────────────────────
+// HEAT INDEX  
 function calculateHeatIndex(tempC, humidity) {
   const T = tempC * 9/5 + 32
   const RH = humidity
@@ -25,7 +25,7 @@ function getHIVerdict(hi) {
   return 'good'
 }
 
-// ─── TIME OF DAY ──────────────────────────────────────────────────────────────
+// TIME OF DAY 
 const OPTIMAL_HOURS = {
   'pesticide-spraying':  [[5, 8], [16, 18]],
   'fertilizer-applying': [[5, 9], [16, 18]],
@@ -42,7 +42,7 @@ function isOptimalTime(taskId, hour) {
   return ranges.some(([start, end]) => hour >= start && hour < end)
 }
 
-// ─── ACTIVITY PROFILES ────────────────────────────────────────────────────────
+// ACTIVITY PROFILES 
 const ACTIVITY_PROFILES = {
   'transplanting': {
     name: 'Transplanting',
@@ -335,7 +335,7 @@ export function getActivityProfile(taskName) {
   return { id: 'generic', ...GENERIC_OUTDOOR_PROFILE }
 }
 
-// ─── NIGHT MODE CHECK ─────────────────────────────────────────────────────────
+// NIGHT MODE CHECK
 export function isNightTime(startTime, startMode) {
   const date = startMode === 'now' ? new Date() : (() => {
     const [h, m] = startTime.split(':').map(Number)
@@ -366,7 +366,7 @@ function hasConsecutiveDryHours(window, threshold, required) {
   return false
 }
 
-// ─── MAIN ANALYZER ────────────────────────────────────────────────────────────
+//  MAIN ANALYZER 
 export function analyzeFeasibility(taskName, startTime, startMode, durationValue, hourlyData) {
   const profile = getActivityProfile(taskName)
   const window = getWeatherWindow(startTime, durationValue, hourlyData, startMode)
@@ -402,6 +402,12 @@ export function analyzeFeasibility(taskName, startTime, startMode, durationValue
     }
   }
 
+  // Wind direction check for pesticide spraying
+  const windDirRisk = profile.id === 'pesticide-spraying' ? checkWindDirectionRisk(window) : { risky: false, shifting: false, dominantDir: null }
+
+  // Dawn check for early tasks
+  const isDawnStart = checkDawnStart(startHour)
+
   // Heat index verdict
   const maxHI = Math.max(...window.map(h => h.heatIndex ?? calculateHeatIndex(h.temp, h.humidity)))
   const hiVerdict = getHIVerdict(maxHI)
@@ -417,7 +423,7 @@ export function analyzeFeasibility(taskName, startTime, startMode, durationValue
 
   const bestWindow = findBestWindow(hourlyData, durationValue, profile, startTime, startMode)
   const showBestWindow = finalVerdict !== 'good' ? bestWindow : null
-  const tips = buildTips(profile, window, maxHI, timeIsOptimal, cloudVerdict,consecutiveVerdict)
+  const tips = buildTips(profile, window, maxHI, timeIsOptimal, cloudVerdict, consecutiveVerdict, windDirRisk, isDawnStart)
 
   return {
     verdict: finalVerdict,
@@ -432,7 +438,7 @@ export function analyzeFeasibility(taskName, startTime, startMode, durationValue
   }
 }
 
-// ─── WEATHER VERDICT ──────────────────────────────────────────────────────────
+// WEATHER VERDICT  
 function determineWeatherVerdict(window, profile) {
   for (const hour of window) {
     if (hour.rain >= profile.rain.bad || hour.wind >= profile.wind.bad || hour.humidity >= profile.humidity.bad)
@@ -445,7 +451,7 @@ function determineWeatherVerdict(window, profile) {
   return 'good'
 }
 
-// ─── SUN/CLOUD VERDICT ────────────────────────────────────────────────────────
+//  SUN/CLOUD VERDICT 
 function determineSunVerdict(window) {
   for (const hour of window) {
     if (hour.weatherCode >= 3) return 'bad'
@@ -456,7 +462,44 @@ function determineSunVerdict(window) {
   return 'good'
 }
 
-// ─── VERDICT LABELS ───────────────────────────────────────────────────────────
+// WIND DIRECTION
+function getWindDirectionLabel(degrees) {
+  const dirs = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW']
+  return dirs[Math.round(degrees / 45) % 8]
+}
+
+function checkWindDirectionRisk(window) {
+  if (window.length < 2) return { risky: false, shifting: false, dominantDir: null }
+
+  const directions = window.map(h => h.windDirection ?? 0)
+  const dominantDir = directions[0]
+  const dominantLabel = getWindDirectionLabel(dominantDir)
+
+  // Check if wind direction shifts more than 45 degrees across the window
+  let maxShift = 0
+  for (let i = 1; i < directions.length; i++) {
+    const diff = Math.abs(directions[i] - directions[i - 1])
+    const shift = Math.min(diff, 360 - diff)
+    if (shift > maxShift) maxShift = shift
+  }
+
+  const shifting = maxShift > 45
+  const avgSpeed = window.reduce((s, h) => s + h.wind, 0) / window.length
+
+  return {
+    risky: shifting && avgSpeed > 10,
+    shifting,
+    dominantDir: dominantLabel,
+    maxShift: Math.round(maxShift),
+  }
+}
+
+// DAWN/DUSK CHECK  
+function checkDawnStart(startHour) {
+  return startHour < 6
+}
+
+// VERDICT LABELS 
 function getVerdictLabel(verdict, timeIsOptimal, maxHI, cloudVerdict) {
   if (verdict === 'bad')     return 'Not Recommended — Consider Rescheduling'
   if (verdict === 'risky')   return 'Risky — Proceed with Caution'
@@ -496,7 +539,7 @@ function getVerdictSub(verdict, profile, window, maxHI, timeIsOptimal, cloudVerd
   return issues.length > 0 ? `Due to ${formatIssues(issues)} in your window.` : `Conditions are borderline for ${profile.name}.`
 }
 
-// ─── FACTORS ─────────────────────────────────────────────────────────────────
+// FACTORS 
 export function buildFactors(window, profile) {
   if (!window || window.length === 0) return [
     { icon: '🌧', label: 'Rain',       value: 'N/A', level: 'ok' },
@@ -540,8 +583,8 @@ export function buildFactors(window, profile) {
 
 function getHILevel(v)       { return v > 41  ? 'bad' : v > 32  ? 'warn' : 'ok' }
 
-// ─── TIPS ─────────────────────────────────────────────────────────────────────
-function buildTips(profile, window, maxHI, timeIsOptimal, cloudVerdict, consecutiveVerdict) {
+// TIPS  
+function buildTips(profile, window, maxHI, timeIsOptimal, cloudVerdict, consecutiveVerdict, windDirRisk, isDawnStart) {
   const tips = [...profile.tips.base]
   const maxRain     = Math.max(...window.map(h => h.rain))
   const maxWind     = Math.max(...window.map(h => h.wind))
@@ -556,11 +599,33 @@ function buildTips(profile, window, maxHI, timeIsOptimal, cloudVerdict, consecut
   if (consecutiveVerdict !== 'good') {
     const taskLabel = profile.id === 'sun-drying' ? 'drying' : 'harvesting'
     tips.push({ icon: '⏱', text: `Interrupted dry periods reduce ${taskLabel} efficiency — look for a window with consistently dry hours throughout.` })
-  }  
+  }
+
+  // Wind direction tip for pesticide spraying
+  if (windDirRisk.risky) {
+    tips.push({
+      icon: '🧭',
+      text: `Wind direction is shifting (up to ${windDirRisk.maxShift}°) during your window — unpredictable drift makes pesticide application risky. Wait for a steadier wind from a consistent direction.`,
+    })
+  } else if (windDirRisk.dominantDir) {
+    tips.push({
+      icon: '🧭',
+      text: `Wind is coming from the ${windDirRisk.dominantDir} during your window. Make sure you spray with the wind at your back and away from water sources, neighbors, and non-target crops.`,
+    })
+  }
+
+  // Dawn start tip
+  if (isDawnStart) {
+    tips.push({
+      icon: '🌄',
+      text: `Starting before 6 AM means low visibility — bring a flashlight or headlamp. Sunrise in Leyte is around 5:30–6:00 AM.`,
+    })
+  }
+
   return tips
 }
 
-// ─── WINDOW HELPERS ───────────────────────────────────────────────────────────
+// WINDOW HELPERS 
 function getWeatherWindow(startTime, durationValue, hourlyData, startMode) {
   const durationHours = parseDurationMax(durationValue)
   const startDate = getStartDate(startTime, startMode)
