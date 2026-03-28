@@ -183,7 +183,9 @@ export default function ResultModal({ task, duration, startTime, startMode, weat
                     Better window: {result.bestTime.label}
                   </div>
                   <div className="modal__best-time-sub">
-                    Rain {result.bestTime.rain}% · Wind {result.bestTime.wind} km/h · Humidity {result.bestTime.humidity}% · Heat Index {result.bestTime.hi}°C — consider rescheduling to this window for better results.
+                    Rain {result.bestTime.rain}% · Wind {result.bestTime.wind} km/h · Humidity {result.bestTime.humidity}% · Heat Index {result.bestTime.hi}°C
+                    {result.bestTime.skyCover && ` · Sky: ${result.bestTime.skyCover}`}
+                    {' '}— consider rescheduling to this window for better results.
                   </div>
                 </div>
               </div>

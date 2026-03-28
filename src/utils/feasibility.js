@@ -649,6 +649,10 @@ function findBestWindow(hourlyData, durationValue, profile, startTime, startMode
     wind: Math.round(bestStart.wind),
     humidity: Math.round(bestStart.humidity),
     hi: bestStart.heatIndex ?? calculateHeatIndex(bestStart.temp, bestStart.humidity),
+    skyCover: profile.requiresSun ? (() => {
+      const code = bestStart.weatherCode ?? 0
+      return code >= 3 ? 'Overcast' : code === 2 ? 'Partly Cloudy' : 'Clear'
+    })() : null,
   }
 }
 
