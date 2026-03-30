@@ -238,11 +238,26 @@
 
 /* Factors */
 .modal__factors {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   gap: 8px;
   padding: 14px 18px;
   border-bottom: 1px solid var(--border);
+}
+
+.modal__factor {
+  text-align: center;
+  flex: 0 0 calc(25% - 6px);
+}
+
+.modal__factors--five .modal__factor {
+  flex: 0 0 calc(33.333% - 6px);
+}
+
+.modal__factors--five .modal__factor:nth-child(4),
+.modal__factors--five .modal__factor:nth-child(5) {
+  flex: 0 0 calc(50% - 4px);
 }
 
 .modal__factor { text-align: center; }
