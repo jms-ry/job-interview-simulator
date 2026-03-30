@@ -258,6 +258,7 @@
 .modal__factors--five .modal__factor:nth-child(4),
 .modal__factors--five .modal__factor:nth-child(5) {
   flex: 0 0 calc(50% - 4px);
+  padding-top: 2rem;
 }
 
 .modal__factor { text-align: center; }
